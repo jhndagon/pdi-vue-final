@@ -50,21 +50,35 @@ export default new Vuex.Store({
       let form = new FormData()
       form.append('file', image)
 
-      fetch(process.env.VUE_APP_BACK_ROUTE + '/api/process/type1',
+      fetch(process.env.VUE_APP_BACK_ROUTE + '/api/process/base',
         {
           method: 'post',
           body: form
         }
       )
-      .then(response => response.blob())
-      .then(function(myBlob) {
-        var objectURL = URL.createObjectURL(myBlob);
-        let data = {
-          url: objectURL,
-          index
-        }
-        commit('imagenesProcesada', data)
-      });
+      .then(response => response.json())
+      .then(data => {
+        
+        let data1 = data.map(data1 => {
+          let b64 = `data:${data1.type};base64,${data1.data}`
+          let data = {
+            url: b64,
+            index
+          }
+          return data
+        })
+        commit('imagenesProcesadas', data1)
+      })
+      // .then(response => response.blob())
+      // .then(function(myBlob) {
+
+      //   // var objectURL = URL.createObjectURL(myBlob);
+      //   // let data = {
+      //   //   url: objectURL,
+      //   //   index
+      //   // }
+      //   // commit('imagenesProcesada', data)
+      // });
 
 
     }
