@@ -2,7 +2,7 @@
   <div>
     <!-- Styled -->
     <b-container>
-      <button-actions></button-actions>
+      <!-- <button-actions></button-actions> -->
       <div class="mt-3">
         <upload-image></upload-image>
       </div>
@@ -14,7 +14,7 @@
         <h3>Imagenes procesadas</h3>
       </div>
 
-      <show-images :images="imagesProcesing"></show-images>
+      <procesed-images :images="imagesProcesing"></procesed-images>
 
     </b-container>
   </div>
@@ -26,11 +26,12 @@ import { mapState } from "vuex";
 import UploadImage from "../components/UploadImage.vue";
 import ButtonActions from '../components/ButtonActions.vue';
 import ShowImages from '../components/ShowImages.vue';
+import ProcesedImages from '../components/ProcesedImages.vue';
 
 
 export default {
   name: "Home",
-  components: { UploadImage,  ButtonActions, ShowImages },
+  components: { UploadImage,  ButtonActions, ShowImages, ProcesedImages },
   computed: {
     ...mapState(["images", "imagesProcesing"]),
   },

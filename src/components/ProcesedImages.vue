@@ -1,12 +1,9 @@
 <template>
   <div>
     <b-row>
-      <b-col sm="4" v-for="(image, index) in images" :key="image.id">
+      <b-col sm="4" v-for="image in images" :key="image.id">
         <b-img :src="image.url" fluid @click="showModal(image)"></b-img>
         <div class="mt-3">Nombre: {{ image.name }}</div>
-        <b-button variant="success" @click="processImageType1(index)">Procesar forma 1</b-button>
-        <b-button variant="warning" >Procesar forma 2</b-button>
-        <b-button variant="info" >Procesar forma 3</b-button>
       </b-col>
       <b-col>
         
@@ -32,7 +29,7 @@ import { mapActions } from 'vuex';
 
 export default {
 
-  name: "ShowImages",
+  name: "ProcesedImages",
   data() {
     return {
       showImage: null,
@@ -42,9 +39,6 @@ export default {
     images: Array,
   },
   methods: {
-    ...mapActions([
-      'processImageType1'
-    ]),
     showModal(image) {
       this.$refs["my-modal"].show();
       this.showImage = image.url;
