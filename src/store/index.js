@@ -10,7 +10,10 @@ export default new Vuex.Store({
     imagesProcesing: [],
     image: null,
     image1: null,
-    file: null
+    file: null,
+    convex: true,
+    contours: false,
+    number: false
   },
   mutations: {
     addImage(state, evt) {
@@ -23,6 +26,15 @@ export default new Vuex.Store({
       }
       state.file = file;
       state.images.push(content)
+    },
+    modifyConvex(state, convex) {
+      state.convex = convex
+    },
+    modifyContour(state, contour) {
+      state.contours = contour
+    },
+    modifyNumber(state, number) {
+      state.number = number
     },
     imagenesProcesadas(state, imagenes) {
       state.imagesProcesing = imagenes
@@ -48,9 +60,12 @@ export default new Vuex.Store({
     processImageType1({ commit }, index) {
       let image = this.state.images[index].file
       let form = new FormData()
-      form.append('file', image)
+      form.append('file', image),
+      form.append("convex_hull", this.state.convex)
+      form.append("contour", this.state.contours)
+      form.append("number", this.state.number)
 
-      fetch(process.env.VUE_APP_BACK_ROUTE + '/api/process/base',
+      fetch(process.env.VUE_APP_BACK_ROUTE + '/api/process/type2',
         {
           method: 'post',
           body: form
