@@ -84,7 +84,7 @@ export default new Vuex.Store({
             kmeans,
             index,
             c_active: false,
-            cH_active: false,
+            cH_active: true,
             center_active: false,
             kmeans_active: false
           }

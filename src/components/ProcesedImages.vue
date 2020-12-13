@@ -18,7 +18,7 @@
       size="xl"
     >
       <b-row align-v="center" style="min-height: 100vh">
-        <b-col sm="10">
+        <b-col sm="9">
           <div style="position: relative; min-height: 90vh" fluid>
             <div style="position: absolute; left: 0; top: 0">
               <b-img :src="kmeans" fluid style="max-height: 90vh"></b-img>
@@ -34,15 +34,15 @@
             </div>
           </div>
         </b-col>
-        <b-col sm="2" class="h-100">
+        <b-col sm="3" class="h-100">
           <b-form-checkbox v-model="c_active" name="convex" switch>
-            Contornos <b>(Checked: {{ c_active }})</b>
+            Contornos
           </b-form-checkbox>
           <b-form-checkbox v-model="cH_active" name="convex" switch>
-            convexHull <b>(Checked: {{ cH_active }})</b>
+            convexHull
           </b-form-checkbox>
           <b-form-checkbox v-model="center_active" name="convex" switch>
-            Imagen segmentada <b>(Checked: {{ center_active }})</b>
+            Imagen segmentada
           </b-form-checkbox>
         </b-col>
       </b-row>
