@@ -37,7 +37,7 @@ export default new Vuex.Store({
       state.number = number
     },
     imagenesProcesadas(state, imagenes) {
-      state.imagesProcesing = imagenes
+      state.imagesProcesing.push(imagenes)
     },
     imagenesProcesada(state, data) {
       console.log("data ", data)
@@ -53,37 +53,43 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    quitarCapas({ commit }) {
+    quitarCapas({
+      commit
+    }) {
       const img = Object.assign([], this.state.images)
       commit('imagenesProcesadas', img)
     },
-    processImageType1({ commit }, index) {
+    processImageType1({
+      commit
+    }, index) {
       let image = this.state.images[index].file
       let form = new FormData()
-      form.append('file', image),
-      form.append("convex_hull", this.state.convex)
-      form.append("contour", this.state.contours)
-      form.append("number", this.state.number)
+      form.append('file', image)
 
-      fetch(process.env.VUE_APP_BACK_ROUTE + '/api/process/type2',
-        {
+      fetch(process.env.VUE_APP_BACK_ROUTE + '/api/process/type2', {
           method: 'post',
           body: form
-        }
-      )
-      .then(response => response.json())
-      .then(data => {
-        
-        let data1 = data.map(data1 => {
-          let b64 = `data:${data1.type};base64,${data1.data}`
-          let data = {
-            url: b64,
-            index
-          }
-          return data
         })
-        commit('imagenesProcesadas', data1)
-      })
+        .then(response => response.json())
+        .then(data => {
+          console.log(data);
+          const contours = `data:${data.contourns.type};base64,${data.contourns.data}`
+          const convexHull = `data:${data.convexHull.type};base64,${data.convexHull.data}`
+          const centers = `data:${data.centers.type};base64,${data.centers.data}`
+          const kmeans = `data:${data.kmeans.type};base64,${data.kmeans.data}`
+          const data1 = {
+            contours,
+            convexHull,
+            centers,
+            kmeans,
+            index,
+            c_active: false,
+            cH_active: false,
+            center_active: false,
+            kmeans_active: false
+          }
+          commit('imagenesProcesadas', data1)
+        })
       // .then(response => response.blob())
       // .then(function(myBlob) {
 
@@ -98,6 +104,5 @@ export default new Vuex.Store({
 
     }
   },
-  modules: {
-  }
+  modules: {}
 })
