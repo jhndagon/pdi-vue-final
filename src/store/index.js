@@ -1,8 +1,8 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
-import axios from 'axios'
+import Vue from "vue";
+import Vuex from "vuex";
+import axios from "axios";
 
-Vue.use(Vuex)
+Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
@@ -13,7 +13,7 @@ export default new Vuex.Store({
     file: null,
     convex: true,
     contours: false,
-    number: false
+    number: false,
   },
   mutations: {
     addImage(state, evt) {
@@ -22,74 +22,116 @@ export default new Vuex.Store({
       const content = {
         url,
         name: file.name,
-        file: file
-      }
+        file: file,
+      };
       state.file = file;
-      state.images.push(content)
-    },
-    modifyConvex(state, convex) {
-      state.convex = convex
-    },
-    modifyContour(state, contour) {
-      state.contours = contour
-    },
-    modifyNumber(state, number) {
-      state.number = number
-    },
-    imagenesProcesadas(state, imagenes) {
-      state.imagesProcesing.push(imagenes)
-    },
-    imagenesProcesada(state, data) {
-      console.log("data ", data)
-      let data1 = {
-        url: data.url,
-        name: ""
-      }
-      if (state.imagesProcesing[data.index] != undefined) {
-        state.imagesProcesing[data.index] = data1
-      } else {
-        state.imagesProcesing.push(data1)
-      }
-    }
-  },
-  actions: {
-    quitarCapas({
-      commit
-    }) {
-      const img = Object.assign([], this.state.images)
-      commit('imagenesProcesadas', img)
-    },
-    processImageType1({
-      commit
-    }, index) {
-      let image = this.state.images[index].file
-      let form = new FormData()
-      form.append('file', image)
+      state.images.push(content);
+      const i = state.images.length;
+      state.imagesProcesing.push({
+        url,
+        isloading: true,
+        index: i
+      });
+      let form = new FormData();
+      form.append("file", file);
 
-      fetch(process.env.VUE_APP_BACK_ROUTE + '/api/process/type2', {
-          method: 'post',
-          body: form
+      fetch(process.env.VUE_APP_BACK_ROUTE + "/api/process/type2", {
+          method: "post",
+          body: form,
         })
-        .then(response => response.json())
-        .then(data => {
-          console.log(data);
-          const contours = `data:${data.contourns.type};base64,${data.contourns.data}`
-          const convexHull = `data:${data.convexHull.type};base64,${data.convexHull.data}`
-          const centers = `data:${data.centers.type};base64,${data.centers.data}`
-          const kmeans = `data:${data.kmeans.type};base64,${data.kmeans.data}`
+        .then((response) => response.json())
+        .then((data) => {
+          const contours = `data:${data.contourns.type};base64,${data.contourns.data}`;
+          const convexHull = `data:${data.convexHull.type};base64,${data.convexHull.data}`;
+          const centers = `data:${data.centers.type};base64,${data.centers.data}`;
+          const kmeans = `data:${data.kmeans.type};base64,${data.kmeans.data}`;
+          const colorSeg = `data:${data.colorSeg.type};base64,${data.colorSeg.data}`;
           const data1 = {
             contours,
             convexHull,
             centers,
             kmeans,
+            colorSeg,
+            name: file.name,
+            c_active: false,
+            cH_active: true,
+            center_active: false,
+            kmeans_active: false,
+          };
+
+          state.imagesProcesing.push(data1);
+          state.imagesProcesing.splice(i - 1, 1);
+          //commit('imagenesProcesadas', data1)
+        });
+    },
+    deleteImage(state, i) {
+      state.imagesProcesing.splice(i, 1)
+    },
+    modifyConvex(state, convex) {
+      state.convex = convex;
+    },
+    modifyContour(state, contour) {
+      state.contours = contour;
+    },
+    modifyNumber(state, number) {
+      state.number = number;
+    },
+    imagenesProcesadas(state, imagenes) {
+      state.imagesProcesing.push(imagenes);
+    },
+    imagenesProcesada(state, data) {
+      console.log("data ", data);
+      let data1 = {
+        url: data.url,
+        name: "",
+      };
+      if (state.imagesProcesing[data.index] != undefined) {
+        state.imagesProcesing[data.index] = data1;
+      } else {
+        state.imagesProcesing.push(data1);
+      }
+    },
+  },
+  actions: {
+    quitarCapas({
+      commit
+    }) {
+      const img = Object.assign([], this.state.images);
+      commit("imagenesProcesadas", img);
+    },
+    processImageType1({
+      commit
+    }, index) {
+      let image = this.state.images[index].file;
+      let form = new FormData();
+      form.append("file", image);
+
+      fetch(process.env.VUE_APP_BACK_ROUTE + "/api/process/type2", {
+          method: "post",
+          body: form,
+        })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data);
+          const contours = `data:${data.contourns.type};base64,${data.contourns.data}`;
+          const convexHull = `data:${data.convexHull.type};base64,${data.convexHull.data}`;
+          const centers = `data:${data.centers.type};base64,${data.centers.data}`;
+          const kmeans = `data:${data.kmeans.type};base64,${data.kmeans.data}`;
+          const colorSeg = `data:${data.colorSeg.type};base64,${data.colorSeg.data}`;
+          const data1 = {
+            contours,
+            convexHull,
+            centers,
+            kmeans,
+            colorSeg,
             index,
             c_active: false,
             cH_active: true,
             center_active: false,
-            kmeans_active: false
-          }
-          commit('imagenesProcesadas', data1)
-        })
+            kmeans_active: false,
+          };
+          commit("imagenesProcesadas", data1);
+        });
       // .then(response => response.blob())
       // .then(function(myBlob) {
 
@@ -100,9 +142,7 @@ export default new Vuex.Store({
       //   // }
       //   // commit('imagenesProcesada', data)
       // });
-
-
-    }
+    },
   },
-  modules: {}
-})
+  modules: {},
+});
