@@ -76,10 +76,10 @@
                 >Imagen original</b-form-radio
               >
               <b-form-radio v-model="selected" name="some-radios" value="B"
-                >Segmentación por color</b-form-radio
+                >Segmentación por K-means</b-form-radio
               >
               <b-form-radio v-model="selected" name="some-radios" value="C"
-                >Segmentación por K-means</b-form-radio
+                >Segmentación por color</b-form-radio
               >
             </b-form-group>
           </div>
